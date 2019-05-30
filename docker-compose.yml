@@ -1,0 +1,37 @@
+version: "3.7"
+services:
+  web:
+    image: backend
+    deploy:
+      replicas: 5
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 50M
+      restart_policy:
+        condition: on-failure
+    environment:
+      - PARSER= http://parser:5000
+    ports:
+      - "3000:3000"
+    networks:
+      - webnet
+    depends_on:
+      - parser
+  parser:
+    image: parser
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 100M
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "5000:5000"
+    networks:
+      - webnet
+networks:
+  webnet:
+
